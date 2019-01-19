@@ -33,6 +33,7 @@ class MadlibForm extends Component {
         super(props)
 
         this.state = {
+            completedForm: false,
             color: '',
             pluralNoun: '',
             adjectiveOne: '',
@@ -52,6 +53,33 @@ class MadlibForm extends Component {
         }.bind(this);
     }
 
+    handleSubmit =  function(event) {
+        this.setState({completedForm: true});
+        event.preventDefault();
+    }.bind(this);
+
+    handleClick = function() {
+        this.setState({
+            completedForm: false,
+            color: '',
+            pluralNoun: '',
+            adjectiveOne: '',
+            celebrityOne: '',
+            adjectiveTwo: '',
+            nounOne: '',
+            numberOne: '',
+            numberTwo: ''
+        })
+    }.bind(this)
+
+    renderButton = function() {
+        if(this.state.completedForm) {
+            return <a className="clear-button" onClick={this.handleClick}>Clear Mad Lib</a>
+        }
+        return <input type="submit" className="generate-button" value="Generate Mad Lib" />
+        
+    }
+
 
     render() {
         this.inputData = [
@@ -69,13 +97,20 @@ class MadlibForm extends Component {
         return (
             <div className="card-wrapper">
                 <Card>
-                    <Row style={{textAlign: 'center', Color: 'white'}}>
-                        {
-                            _.map(this.inputData, (data, indexKey) => {
-                                return <MadlibInput key={indexKey} index={indexKey + 1} state={data.state} placeholder={data.placeholder} onChange={this.handleChange({inputTitle: data.prop})} />
-                            })
-                        }
-                    </Row>
+                    <form onSubmit={this.handleSubmit} id="madlib-form">
+                        <Row style={{textAlign: 'center', Color: 'white'}}>
+                            {
+                                _.map(this.inputData, (data, indexKey) => {
+                                    return <MadlibInput key={indexKey} index={indexKey + 1} state={data.state} placeholder={data.placeholder} onChange={this.handleChange({inputTitle: data.prop})} />
+                                })
+                            }
+                        </Row>
+                        <Row>
+                            <Col md="12" className="button-wrapper">
+                                {this.renderButton()}
+                            </Col>
+                        </Row>
+                    </form>
                 </Card>
             </div>
         );
